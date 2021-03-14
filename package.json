@@ -1,5 +1,5 @@
 {
-  "name": "sequelize-query-parser",
+  "name": "sequelize-query",
   "version": "1.0.0",
   "description": "Sequelize query parser",
   "main": "sequelizeQueryParser.js",
