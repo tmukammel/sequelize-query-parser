@@ -1,0 +1,25 @@
+{
+  "name": "query-parser",
+  "version": "1.0.0",
+  "description": "Sequelize query parser",
+  "main": "sequelizeQueryParser.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tmukammel/sequelize-query-parser.git"
+  },
+  "keywords": [
+    "sequelize",
+    "query",
+    "query",
+    "parser"
+  ],
+  "author": "Twaha Mukammel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tmukammel/sequelize-query-parser/issues"
+  },
+  "homepage": "https://github.com/tmukammel/sequelize-query-parser#readme"
+}
