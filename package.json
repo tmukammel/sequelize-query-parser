@@ -12,9 +12,11 @@
   },
   "keywords": [
     "sequelize",
-    "query",
-    "query",
-    "parser"
+    "nodejs",
+    "express",
+    "query-parser",
+    "graph-api",
+    "sequelize-orm"
   ],
   "author": "Twaha Mukammel",
   "license": "MIT",
