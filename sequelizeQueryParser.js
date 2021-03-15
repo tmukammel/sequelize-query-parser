@@ -16,7 +16,7 @@ const Promise = require('bluebird');
 module.exports = function (db) {
     const Op = db.Sequelize.Op;
 
-    const operations = {
+    const operators = {
         gt: Op.gt,
         gte: Op.gte,
         lt: Op.lt,
@@ -45,7 +45,12 @@ module.exports = function (db) {
         // any: Op.any                     // ANY ARRAY[2, 3]::INTEGER (PG only)
     }
     
-    const splitAndBuild = (obj, array) => {
+    /**
+     * Split '.' or ',' seperated strings to array
+     * @param {JSON} obj 
+     * @param {array} array 
+     */
+    const splitStringAndBuildArray = (obj, array) => {
         let elements = obj.split(',');
         
         if (elements && elements.length > 0) {
@@ -59,23 +64,23 @@ module.exports = function (db) {
     }
     
     /**
-     * Parse query param
+     * Parse query params
      * @param {string|Array} query
      * @returns {Array} sequelize formatted DB query array
      */
     const parseFields = (query) => {
-        var array = null;
+        let array = null;
     
         if (query !== null) {
             array = [];
     
             if (Array.isArray(query) == true) {
                 query.forEach(obj => {
-                    splitAndBuild(obj, array);
+                    splitStringAndBuildArray(obj, array);
                 });
             }
             else {
-                splitAndBuild(query, array);
+                splitStringAndBuildArray(query, array);
             }
         }
     
@@ -83,19 +88,19 @@ module.exports = function (db) {
     }
     
     /**
-     * Replaces json object key with Sequelize operation
+     * Replaces operator (json object key) with Sequelize operator.
      * @param {JSON} json 
      * @param {string} key 
      * @param {Sequelize.op} op
      */
-    const replaceKey = (json, key, op) => {
+    const replaceKeyWithOperator = (json, key, op) => {
         let value = json[key];
         delete json[key];
         json[op] = value;
     }
     
     /**
-     * Iteratively replace json keys with Sequelize formated query operations.
+     * Iteratively replace json keys with Sequelize formated query operators.
      * @param {JSON} json next json
      */
     const iterativeReplace = (json) => {
@@ -103,11 +108,11 @@ module.exports = function (db) {
             if (json[key] !== null && typeof json[key] === 'object') {
     
                 // console.debug("key: ", key);
-                let op = operations[key];
+                let op = operators[key];
                 // console.debug("operation: ", op);
     
                 if (op) {
-                    replaceKey(json, key, op);
+                    replaceKeyWithOperator(json, key, op);
                     // console.debug("next: ", JSON.stringify(json[op], null, 4));
                     iterativeReplace(json[op]);
                 }
@@ -121,8 +126,8 @@ module.exports = function (db) {
                 json['model'] = db[json[key]];
             }
             else {
-                let op = operations[key];
-                if (op) replaceKey(json, key, op);
+                let op = operators[key];
+                if (op) replaceKeyWithOperator(json, key, op);
             }
     
             // console.debug("After Key:", key, " Query fields: ", JSON.stringify(json, null, 4))
@@ -163,7 +168,7 @@ module.exports = function (db) {
         // console.debug("Query param: ", JSON.stringify(elements, null, 4));
         if (elements && elements.length > 1) {
             var param = {};
-            param[operations[elements[0]]] = elements[1]
+            param[operators[elements[0]]] = elements[1]
     
             console.debug("Query param: ", param);
             return param;
@@ -174,10 +179,14 @@ module.exports = function (db) {
         }
     }
     
+    // Max page size limit is set to 200
     const pageSizeLimit = 200;
     
     /**
-     * Parse filtering, query, sorting, paging, group queries
+     * Sequelize Query Parser is a very simple package that 
+     * turns your RESTful APIs into a basic set of Graph APIs.
+     * 
+     * Parses - filter, query, sorting, paging, group, relational object queries
      * 
      * fields=field01,field02...
      * 
@@ -188,6 +197,8 @@ module.exports = function (db) {
      * group_by=field01,field02
      * 
      * query=JSON
+     * 
+     * include=JSON
      * 
      * filedName=unaryOperator:value
      * 
@@ -209,16 +220,19 @@ module.exports = function (db) {
                     switch (key) {
                         // Fields
                         case 'fields':
+                            // split the field names (attributes) and assign to an array
                             let fields = req.query.fields.split(",");
+                            // assign fields array to .attributes
                             if (fields && fields.length > 0) dbQuery.attributes = fields;
                             break;
             
+                        // pagination page size
                         case 'limit':
-                            // TODO: Define limit configurations
                             dbQuery.limit = Math.min(Math.max(parseInt(req.query.limit), 1), pageSizeLimit);
                             limit = dbQuery.limit;
                             break;
             
+                        // pagination page offset
                         case 'offset':
                             offset = Math.max(parseInt(req.query.offset), 0);
                             break;
@@ -240,8 +254,9 @@ module.exports = function (db) {
                             dbQuery.where = { ...dbQuery.where, ...parsed };
                             break;
     
+                        // include and query on associated tables
                         case 'include':
-                            dbQuery.include = parseIncludeFields(req.query.include);;
+                            dbQuery.include = parseIncludeFields(req.query.include);
                             break;
             
                         // Simple filter query
@@ -264,7 +279,5 @@ module.exports = function (db) {
         })
     }
     
-    return {
-        parse
-    }
+    return { parse }
 }
