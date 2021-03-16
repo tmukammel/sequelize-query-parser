@@ -133,6 +133,17 @@ module.exports = function (db) {
             // console.debug("After Key:", key, " Query fields: ", JSON.stringify(json, null, 4))
         });
     }
+
+    /**
+     * Unescape escaped sequences in string.
+     * @param {*} query string with escape sequence
+     * @returns {string} unescaped string
+     */
+    const unescapeEscapedQuery = (query) => {
+        const queryString = query.toString();
+        const queryStringUnescaped = unescape(queryString);
+        return queryStringUnescaped;
+    }
     
     /**
      * Parse and build Sequelize format query
@@ -140,9 +151,9 @@ module.exports = function (db) {
      * @returns {JSON} sequelize formatted DB query params JSON
      */
     const parseQueryFields = (query) => {
-        let json = JSON.parse(query.toString());
+        let json = JSON.parse(unescapeEscapedQuery(query));
         iterativeReplace(json);
-        console.debug("Resultent query fields: ", json);
+        // console.debug("Resultent query fields: ", json);
         return json;
     }
     
@@ -152,9 +163,9 @@ module.exports = function (db) {
      * @returns {JSON} sequelize formatted DB include params JSON
      */
     const parseIncludeFields = (query) => {
-        let json = JSON.parse(query.toString());
+        let json = JSON.parse(unescapeEscapedQuery(query));
         iterativeReplace(json);
-        console.debug("Resultent include fields: ", json);
+        // console.debug("Resultent include fields: ", json);
         return json;
     }
     
@@ -170,11 +181,11 @@ module.exports = function (db) {
             var param = {};
             param[operators[elements[0]]] = elements[1]
     
-            console.debug("Query param: ", param);
+            // console.debug("Query param: ", param);
             return param;
         }
         else {
-            console.debug("Query param: ", elements[0]);
+            // console.debug("Query param: ", elements[0]);
             return elements[0];
         }
     }
@@ -268,7 +279,8 @@ module.exports = function (db) {
     
                 dbQuery.offset = offset * limit;
             
-                console.debug("Query: ", JSON.stringify(dbQuery, null, 4));
+                console.debug("Final sequelize query:");
+                console.debug(JSON.stringify(dbQuery, null, 4));
             
                 resolve(dbQuery);
             }
