@@ -12,8 +12,6 @@
 [![GitHub open issues](https://badgen.net/github/open-issues/tmukammel/sequelize-query-parser)](https://github.com/tmukammel/sequelize-query-parser/issues?q=is%3Aissue+is%3Aopen+)
 [![GitHub closed issues](https://badgen.net/github/closed-issues/tmukammel/sequelize-query-parser)](https://github.com/tmukammel/sequelize-query-parser/issues?q=is%3Aissue+is%3Aclosed+)
 
-<!-- [![GitHub version](https://badge.fury.io/gh/tmukammel%2Fsequelize-query-parser)](https://badge.fury.io/gh/tmukammel%2Fsequelize-query-parser) -->
-
 Simple, powerful, minimalist package to turn your [Node.js](https://nodejs.org) with [Sequelize](http://sequelize.org) RESTful APIs into [Graph APIs](https://zapier.com/engineering/graph-apis/).
 
 ```js
