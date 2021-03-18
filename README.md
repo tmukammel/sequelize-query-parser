@@ -1,5 +1,19 @@
 # Sequelize Query Parser
 
+[![npm version](https://badgen.net/npm/v/sequelize-query)](https://www.npmjs.com/package/sequelize-query)
+[![npm downloads](https://badgen.net/npm/dw/sequelize-query)](https://www.npmjs.com/package/sequelize-query)
+
+[![GitHub latest stable releases](https://badgen.net/github/release/tmukammel/sequelize-query-parser/stable)](https://github.com/tmukammel/sequelize-query-parser/releases/tag/v1.0.3)
+[![GitHub releases](https://badgen.net/github/releases/tmukammel/sequelize-query-parser)](https://github.com/tmukammel/sequelize-query-parser/releases)
+[![GitHub stars](https://badgen.net/github/stars/tmukammel/sequelize-query-parser)](https://github.com/tmukammel/sequelize-query-parser/stargazers)
+[![GitHub license](https://badgen.net/github/license/tmukammel/sequelize-query-parser)](https://github.com/tmukammel/sequelize-query-parser/blob/develop/LICENSE)
+
+[![GitHub issues](https://badgen.net/github/issues/tmukammel/sequelize-query-parser)](https://github.com/tmukammel/sequelize-query-parser/issues)
+[![GitHub open issues](https://badgen.net/github/open-issues/tmukammel/sequelize-query-parser)](https://github.com/tmukammel/sequelize-query-parser/issues?q=is%3Aissue+is%3Aopen+)
+[![GitHub closed issues](https://badgen.net/github/closed-issues/tmukammel/sequelize-query-parser)](https://github.com/tmukammel/sequelize-query-parser/issues?q=is%3Aissue+is%3Aclosed+)
+
+<!-- [![GitHub version](https://badge.fury.io/gh/tmukammel%2Fsequelize-query-parser)](https://badge.fury.io/gh/tmukammel%2Fsequelize-query-parser) -->
+
 Simple, powerful, minimalist package to turn your [Node.js](https://nodejs.org) with [Sequelize](http://sequelize.org) RESTful APIs into [Graph APIs](https://zapier.com/engineering/graph-apis/).
 
 ```js
