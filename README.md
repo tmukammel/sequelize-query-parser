@@ -3,7 +3,7 @@
 [![npm version](https://badgen.net/npm/v/sequelize-query)](https://www.npmjs.com/package/sequelize-query)
 [![npm downloads](https://badgen.net/npm/dw/sequelize-query)](https://www.npmjs.com/package/sequelize-query)
 
-[![GitHub latest stable releases](https://badgen.net/github/release/tmukammel/sequelize-query-parser/stable)](https://github.com/tmukammel/sequelize-query-parser/releases/tag/v1.0.3)
+[![GitHub latest stable releases](https://badgen.net/github/release/tmukammel/sequelize-query-parser/stable)](https://github.com/tmukammel/sequelize-query-parser/releases/latest)
 [![GitHub releases](https://badgen.net/github/releases/tmukammel/sequelize-query-parser)](https://github.com/tmukammel/sequelize-query-parser/releases)
 [![GitHub stars](https://badgen.net/github/stars/tmukammel/sequelize-query-parser)](https://github.com/tmukammel/sequelize-query-parser/stargazers)
 [![GitHub license](https://badgen.net/github/license/tmukammel/sequelize-query-parser)](https://github.com/tmukammel/sequelize-query-parser/blob/develop/LICENSE)
