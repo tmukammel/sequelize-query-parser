@@ -179,15 +179,20 @@ module.exports = function (db) {
         // console.debug("Query param: ", JSON.stringify(elements, null, 4));
         if (elements && elements.length > 1) {
             var param = {};
-            param[operators[elements[0]]] = elements[1]
-    
-            // console.debug("Query param: ", param);
-            return param;
+            const elementsArray = elements[1].split(',')
+            if (elementsArray){
+                if (elementsArray.length > 1){
+                    param[operators[elements[0]]] = elementsArray
+                }
+                else {
+                    param[operators[elements[0]]] = elementsArray[0]
+                }
+                // console.debug("Query param: ", param);
+                return param;
+            }
         }
-        else {
-            // console.debug("Query param: ", elements[0]);
-            return elements[0];
-        }
+        // console.debug("Query param: ", elements[0]);
+        return elements[0];
     }
     
     // Max page size limit is set to 200
