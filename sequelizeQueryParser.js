@@ -175,7 +175,7 @@ module.exports = function (db) {
      * @returns {string|JSON} sequelize formatted DB query param
      */
     const parseQueryParam = (query) => {
-        let elements = query.split(':');
+        let elements = query.split(/:(.+)/);
         // console.debug("Query param: ", JSON.stringify(elements, null, 4));
         if (elements && elements.length > 1) {
             var param = {};
