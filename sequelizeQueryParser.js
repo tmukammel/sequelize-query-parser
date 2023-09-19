@@ -13,7 +13,7 @@ const Promise = require('bluebird');
  * @param {*} db
  * @returns object {parse}
  */
-module.exports = function (db) {
+module.exports = (db) => {
     const Op = db.Sequelize.Op;
 
     const operators = {
@@ -51,16 +51,15 @@ module.exports = function (db) {
      * @param {array} array
      */
     const splitStringAndBuildArray = (obj, array) => {
-        let elements = obj.split(',');
+        const elements = obj.split(',');
 
-        if (elements && elements.length > 0) {
-            elements.forEach((element) => {
-                var fields = element.split('.');
-                if (fields && fields.length > 0) {
-                    array.push(fields);
-                }
-            });
-        }
+        elements.forEach((element) => {
+            const fields = element.split('.');
+            
+            if (fields && fields.length > 0) {
+                array.push(fields);
+            }
+        });
     };
 
     /**
@@ -93,39 +92,32 @@ module.exports = function (db) {
      * @param {Sequelize.op} op
      */
     const replaceKeyWithOperator = (json, key, op) => {
-        let value = json[key];
+        const value = json[key];
         delete json[key];
         json[op] = value;
     };
 
     /**
-     * Iteratively replace json keys with Sequelize formated query operators.
+     * Iteratively replace json keys with Sequelize formatted query operators.
      * @param {JSON} json next json
      */
     const iterativeReplace = (json) => {
-        Object.keys(json).forEach(function (key) {
+        Object.keys(json).forEach((key) => {
             if (json[key] !== null && typeof json[key] === 'object') {
-                // console.debug("key: ", key);
-                let op = operators[key];
-                // console.debug("operation: ", op);
+                const op = operators[key];
 
                 if (op) {
                     replaceKeyWithOperator(json, key, op);
-                    // console.debug("next: ", JSON.stringify(json[op], null, 4));
                     iterativeReplace(json[op]);
                 } else {
-                    // console.debug("next: ", JSON.stringify(json[key], null, 4));
                     iterativeReplace(json[key]);
                 }
             } else if (key == 'model' && db[json[key]] != null) {
-                // json['as'] = json[key].replace(/^./, char => char.toLowerCase());// /^\w/
-                json['model'] = db[json[key]];
+                json.model = db[json[key]];
             } else {
-                let op = operators[key];
+                const op = operators[key];
                 if (op) replaceKeyWithOperator(json, key, op);
             }
-
-            // console.debug("After Key:", key, " Query fields: ", JSON.stringify(json, null, 4))
         });
     };
 
@@ -136,8 +128,7 @@ module.exports = function (db) {
      */
     const unescapeEscapedQuery = (query) => {
         const queryString = query.toString();
-        const queryStringUnescaped = unescape(queryString);
-        return queryStringUnescaped;
+        return unescape(queryString);
     };
 
     /**
@@ -146,9 +137,8 @@ module.exports = function (db) {
      * @returns {JSON} sequelize formatted DB query params JSON
      */
     const parseQueryFields = (query) => {
-        let json = JSON.parse(unescapeEscapedQuery(query));
+        const json = JSON.parse(unescapeEscapedQuery(query));
         iterativeReplace(json);
-        // console.debug("Resultent query fields: ", json);
         return json;
     };
 
@@ -158,9 +148,8 @@ module.exports = function (db) {
      * @returns {JSON} sequelize formatted DB include params JSON
      */
     const parseIncludeFields = (query) => {
-        let json = JSON.parse(unescapeEscapedQuery(query));
+        const json = JSON.parse(unescapeEscapedQuery(query));
         iterativeReplace(json);
-        // console.debug("Resultent include fields: ", json);
         return json;
     };
 
@@ -170,22 +159,18 @@ module.exports = function (db) {
      * @returns {string|JSON} sequelize formatted DB query param
      */
     const parseQueryParam = (query) => {
-        let elements = query.split(/:(.+)/);
-        // console.debug("Query param: ", JSON.stringify(elements, null, 4));
-        if (elements && elements.length > 1) {
-            var param = {};
+        const elements = query.split(/:(.+)/);
+
+        if (elements?.length > 1) {
+            const param = {};
             const elementsArray = elements[1].split(',');
+            
             if (elementsArray) {
-                if (elementsArray.length > 1) {
-                    param[operators[elements[0]]] = elementsArray;
-                } else {
-                    param[operators[elements[0]]] = elementsArray[0];
-                }
-                // console.debug("Query param: ", param);
+                param[operators[elements[0]]] = elementsArray.length > 1 ? elementsArray : elementsArray[0];
                 return param;
             }
         }
-        // console.debug("Query param: ", elements[0]);
+        
         return elements[0];
     };
 
@@ -220,9 +205,9 @@ module.exports = function (db) {
 
         return new Promise((resolve, reject) => {
             try {
-                var offset = 0,
-                    limit = pageSizeLimit;
-                var dbQuery = {
+                let offset = 0;
+                let limit = pageSizeLimit;
+                const dbQuery = {
                     where: {},
                     offset,
                     limit
@@ -233,7 +218,7 @@ module.exports = function (db) {
                         // Fields
                         case 'fields':
                             // split the field names (attributes) and assign to an array
-                            let fields = req.query.fields.split(',');
+                            const fields = req.query.fields.split(',');
                             // assign fields array to .attributes
                             if (fields && fields.length > 0) dbQuery.attributes = fields;
                             break;
@@ -262,7 +247,7 @@ module.exports = function (db) {
 
                         // JSON (nested) query
                         case 'query':
-                            let parsed = parseQueryFields(req.query.query);
+                            const parsed = parseQueryFields(req.query.query);
                             dbQuery.where = { ...dbQuery.where, ...parsed };
                             break;
 
